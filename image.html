@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+            src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <input type="text" id="searchText">
+    <button onclick="fetch()">클릭</button>
+    <ul class="newslist">
+    </ul>
+</body>
+<script>
+    function fetch() {
+        $(".newslist").empty();
+        var text = $("#searchText").val();
+        $.ajax({
+            method: "GET",
+            url: "http://davids-restaurant.herokuapp.com/menu_items.json",
+            data: { category: text}
+        })
+        .done(function( msg ) {
+            console.log(msg);
+            for (i=0; i < msg.menu_items.length; i++) {
+                $(".newslist").append("<img src='http://rockethyun.github.io/module5-solution/images/menu/" + text + "/" + msg.menu_items[i].short_name +".jpg'>" + "<li>"+ msg.menu_items[i].name+ "($" + msg.menu_items[i].price_large + ")" +"<br>(" + "☞: " + msg.menu_items[i].description + ")" +"</li>")
+            }
+        });
+    }
+</script>
+</html>
