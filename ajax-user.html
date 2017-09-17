@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script
+            src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <h2>신규 유저 만들기</h2>
+
+    이메일: <input type="text" name="email" class="emailInput"><br />
+    이름: <input type="text" name="name" class="nameInput"><br />
+    비밀번호: <input type="password" name="password" class="passwordInput"><br />
+    <button onclick="userCreate()">만들기</button>
+    <br />
+    <br />
+
+    <h3>유저 명단</h3>
+    <ul class="userList">
+
+    </ul>
+
+</body>
+
+
+
+<script>
+
+
+    function start () {
+        $.ajax({
+            method: "GET",
+            url: "https://railscrudapi.herokuapp.com/users"
+        })
+        .done(function( data ) {
+            console.log(data);
+            for (i=0; i < data.length; i++) {
+                $(".userList").append("<li>"+ data[i].name +
+                "<button onclick='deleteUser(" + data[i].id +")'>삭제</button></li>")
+            }
+        });
+    }
+
+    start();
+
+
+    function userCreate() {
+        $(".userList").empty();
+        var userEmail = $(".emailInput").val();
+        var userName = $(".nameInput").val();
+        var userPassword = $(".passwordInput").val();
+        $.ajax({
+            method: "POST",
+            url: "https://railscrudapi.herokuapp.com/users",
+            data: { "email": userEmail, "name": userName, "password": userPassword }
+        })
+        .done(function( msg ) {
+            console.log(msg);
+            start();
+        });
+    }
+
+    function deleteUser(index) {
+        $(".userList").empty();
+        $.ajax({
+            method: "DELETE",
+            url: "https://railscrudapi.herokuapp.com/users/" + index
+        })
+        .done(function( msg ) {
+            console.log(msg);
+            start();
+        });
+    }
+
+
+
+</script>
+</html>
